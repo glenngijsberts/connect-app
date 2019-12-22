@@ -55,37 +55,20 @@ const LoginLinkButtonLabel = styled(Text)`
   color: ${color.primary};
 `
 
-const RegisterScreen = ({ ...props }) => (
+const LoginScreen = () => (
   <Container>
-    <TopContent>
-      <CenterTitle>{APP_NAME}</CenterTitle>
-      <CenterText>Dé app voor het netwerken op evenementen</CenterText>
+    <TopContent></TopContent>
 
-      <StyledImage
-        source={require('../../assets/images/undraw_register.png')}
-      />
-    </TopContent>
-
-    <BottomContent>
-      <LinkedInButton variant="linkedIn">
-        Registreren met LinkedIn
-      </LinkedInButton>
-      <EmailButton>Registreren met e-mail</EmailButton>
-
-      <LoginLink>
-        {/* Keep the space at the end */}
-        <Footnote>Heb je al een profiel? </Footnote>
-
-        <LoginLinkButton onPress={() => props.navigation.navigate('Login')}>
-          <LoginLinkButtonLabel>Inloggen</LoginLinkButtonLabel>
-        </LoginLinkButton>
-      </LoginLink>
-    </BottomContent>
+    <BottomContent></BottomContent>
   </Container>
 )
 
-RegisterScreen.navigationOptions = {
-  title: 'Registreren',
+LoginScreen.navigationOptions = {
+  title: 'Inloggen',
+  headerTintColor: color.black,
+  headerLeftContainerStyle: {
+    marginLeft: 16,
+  },
 }
 
-export default RegisterScreen
+export default LoginScreen

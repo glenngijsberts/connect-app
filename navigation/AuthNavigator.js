@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack'
   Screens
 */
 import RegisterScreen from '../screens/AuthStack/RegisterScreen'
+import LoginScreen from '../screens/AuthStack/LoginScreen'
 
 /*
   Config
@@ -21,8 +22,12 @@ const config = Platform.select({
 const AuthStack = createStackNavigator(
   {
     Introduction: RegisterScreen,
+    Login: LoginScreen,
   },
-  config
+  {
+    ...config,
+    headerBackTitleVisible: false,
+  }
 )
 
 export default AuthStack
