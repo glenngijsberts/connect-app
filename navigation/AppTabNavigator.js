@@ -9,12 +9,19 @@ import TabBarIcon from '../components/TabBarIcon'
   Screens
 */
 import EventScreen from '../screens/EventStack/EventScreen'
+import ConnectionScreen from '../screens/ConnectionStack/ConnectionScreen'
 
+/*
+  Config
+*/
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 })
 
+/*
+  EventStack
+*/
 const EventStack = createStackNavigator(
   {
     Events: EventScreen,
@@ -27,20 +34,38 @@ EventStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-globe${focused ? '' : '-outline'}`
-          : 'md-globe'
-      }
+      name={Platform.OS === 'ios' ? 'ios-globe' : 'md-globe'}
     />
   ),
 }
 
-EventStack.path = ''
+/*
+  ConnectionStack
+*/
+const ConnectionStack = createStackNavigator(
+  {
+    Connections: ConnectionScreen,
+  },
+  config
+)
 
-const tabNavigator = createBottomTabNavigator(
+ConnectionStack.navigationOptions = {
+  tabBarLabel: 'Connecties',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-briefcase' : 'md-briefcase'}
+    />
+  ),
+}
+
+/*
+  TabNavigator
+*/
+const AppTabNavigator = createBottomTabNavigator(
   {
     EventStack,
+    ConnectionStack,
   },
   {
     tabBarOptions: {
@@ -58,6 +83,4 @@ const tabNavigator = createBottomTabNavigator(
   }
 )
 
-tabNavigator.path = ''
-
-export default tabNavigator
+export default AppTabNavigator

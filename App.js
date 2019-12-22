@@ -29,7 +29,7 @@ function handleLoadingError(error) {
   console.warn(error)
 }
 
-export default function App({ skipLoadingScreen }) {
+const App = ({ skipLoadingScreen, ...props }) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
 
   if (!isLoadingComplete && !skipLoadingScreen) {
@@ -44,8 +44,10 @@ export default function App({ skipLoadingScreen }) {
     return (
       <Container>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
+        <AppNavigator initialSwitch="App" />
       </Container>
     )
   }
 }
+
+export default App
