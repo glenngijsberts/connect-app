@@ -13,7 +13,7 @@ const Container = styled(View)`
 
 async function loadResourcesAsync() {
   await Promise.all([
-    Asset.loadAsync([]),
+    Asset.loadAsync([require('./assets/images/undraw_register.png')]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
       ...Ionicons.font,
