@@ -1,10 +1,14 @@
-import React from 'react'
-import { View, Image, TouchableOpacity, Text, SafeAreaView } from 'react-native'
+import React, { useState, useRef } from 'react'
+import { View, TouchableOpacity, Text, SafeAreaView } from 'react-native'
 import styled from 'styled-components/native'
-import { APP_NAME } from '../../constants'
-import { Footnote, SmallTitle } from '../../components/Text'
+import { Footnote } from '../../components/Text'
 import { spacing, color } from '../../theme'
+import Layout from '../../theme/Layout'
 import Button from '../../components/Button'
+import Input from '../../components/Input'
+import Block from '../../components/Block'
+import DividerTitle from '../../components/DividerTitle'
+import * as WebBrowser from 'expo-web-browser'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -21,47 +25,95 @@ const BottomContent = styled(View)`
   justify-content: flex-end;
 `
 
-const StyledImage = styled(Image)`
-  width: 240px;
-  height: 240px;
-`
-
-const CenterTitle = styled(SmallTitle)`
-  margin-bottom: ${spacing[8]};
-  text-align: center;
-`
-
-const CenterText = styled(Footnote)`
-  text-align: center;
-  margin-bottom: ${spacing[32]};
-`
-
-const LinkedInButton = styled(Button)`
-  margin-bottom: ${spacing[8]};
-`
-
-const EmailButton = styled(Button)`
+const LoginButton = styled(Button)`
   margin-bottom: ${spacing[24]};
 `
 
-const LoginLink = styled(View)`
+const RegisterLink = styled(View)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
   margin-bottom: ${spacing[16]};
 `
-const LoginLinkButton = styled(TouchableOpacity)``
-const LoginLinkButtonLabel = styled(Text)`
+const RegisterLinkButton = styled(TouchableOpacity)``
+const RegisterLinkButtonLabel = styled(Text)`
   color: ${color.primary};
 `
 
-const LoginScreen = () => (
-  <Container>
-    <TopContent></TopContent>
+const PrivacyStatement = styled(View)`
+  align-items: center;
+  max-width: ${Layout.gridWidth}px;
+  margin-bottom: ${spacing[32]};
+`
 
-    <BottomContent></BottomContent>
-  </Container>
-)
+const PrivacyLink = styled(Text)`
+  font-size: 13px;
+  color: ${color.primary};
+`
+
+function handlePrivacyStatement() {
+  WebBrowser.openBrowserAsync('https://www.sqits.nl')
+}
+
+const LoginScreen = (props) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const passwordRef = useRef()
+
+  return (
+    <Container>
+      <TopContent>
+        <Block marginBottom={16}>
+          <Input
+            placeholder="E-mailadres"
+            value={email}
+            onChangeText={(value) => setEmail(value)}
+            keyboardType="email-address"
+            onSubmitEditing={() => passwordRef.current.focus()}
+            blurOnSubmit={false}
+          />
+        </Block>
+
+        <Block marginBottom={24}>
+          <Input
+            placeholder="Wachtwoord"
+            value={password}
+            secureTextEntry={true}
+            onChangeText={(value) => setPassword(value)}
+            keyboardType="email-address"
+            ref={passwordRef}
+          />
+        </Block>
+
+        <LoginButton>Inloggen</LoginButton>
+
+        <Block marginBottom={24}>
+          <DividerTitle>of</DividerTitle>
+        </Block>
+
+        <Button variant="linkedIn">Inloggen met LinkedIn</Button>
+      </TopContent>
+
+      <BottomContent>
+        <PrivacyStatement>
+          <Footnote>De gebruikersvoorwaarden en het privacy statement</Footnote>
+          <TouchableOpacity onPress={handlePrivacyStatement}>
+            <PrivacyLink>zijn hier terug te vinden</PrivacyLink>
+          </TouchableOpacity>
+        </PrivacyStatement>
+
+        <RegisterLink>
+          {/* Keep the space at the end */}
+          <Footnote>Nog geen profiel? </Footnote>
+
+          <RegisterLinkButton onPress={() => props.navigation.goBack()}>
+            <RegisterLinkButtonLabel>Registreren</RegisterLinkButtonLabel>
+          </RegisterLinkButton>
+        </RegisterLink>
+      </BottomContent>
+    </Container>
+  )
+}
 
 LoginScreen.navigationOptions = {
   title: 'Inloggen',
