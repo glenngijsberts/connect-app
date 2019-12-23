@@ -9,6 +9,7 @@ const Button = styled(TouchableOpacity)`
   width: ${Layout.gridWidth}px;
   padding: 12px 16px;
   border-radius: 4px;
+  font-size: 17px;
 
   ${(props) =>
     props.variant === 'primary' &&
