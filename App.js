@@ -6,6 +6,14 @@ import { Platform, StatusBar, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AppNavigator from './navigation/AppNavigator'
 import styled from 'styled-components/native'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { endpoint as uri } from './config'
+
+// Create the client as outlined in the setup guide
+const client = new ApolloClient({
+  uri,
+})
 
 const Container = styled(View)`
   flex: 1;
@@ -42,10 +50,12 @@ const App = ({ skipLoadingScreen, ...props }) => {
     )
   } else {
     return (
-      <Container>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator initialSwitch="App" />
-      </Container>
+      <ApolloProvider client={client}>
+        <Container>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator initialSwitch="App" />
+        </Container>
+      </ApolloProvider>
     )
   }
 }
