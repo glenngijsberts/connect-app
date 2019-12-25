@@ -1,5 +1,11 @@
 import React, { useState, useRef } from 'react'
-import { View, TouchableOpacity, Text, SafeAreaView } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native'
 import styled from 'styled-components/native'
 import { Footnote } from '../../components/Text'
 import { spacing, color } from '../../theme'
@@ -9,6 +15,8 @@ import Input from '../../components/Input'
 import Block from '../../components/Block'
 import DividerTitle from '../../components/DividerTitle'
 import * as WebBrowser from 'expo-web-browser'
+import { useMutation } from '@apollo/react-hooks'
+import LOGIN_WITH_EMAIL from '../../graphql-mutations/login'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -27,6 +35,7 @@ const BottomContent = styled(View)`
 
 const LoginButton = styled(Button)`
   margin-bottom: ${spacing[24]};
+  align-items: center;
 `
 
 const RegisterLink = styled(View)`
@@ -51,6 +60,12 @@ const PrivacyLink = styled(Text)`
   color: ${color.primary};
 `
 
+const ErrorText = styled(Text)`
+  text-align: center;
+  color: red;
+  max-width: ${Layout.gridWidth}px;
+`
+
 function handlePrivacyStatement() {
   WebBrowser.openBrowserAsync('https://www.sqits.nl')
 }
@@ -58,7 +73,47 @@ function handlePrivacyStatement() {
 const LoginScreen = (props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState([])
+  const [user, setUser] = useState(null)
   const passwordRef = useRef()
+  const [login] = useMutation(LOGIN_WITH_EMAIL, {
+    variables: {
+      email,
+      password,
+    },
+  })
+
+  const handleLoginWithEmail = async () => {
+    setErrors([])
+    setUser(null)
+    setLoading(true)
+
+    if (!email || !password) {
+      setLoading(false)
+
+      return setErrors([
+        {
+          code: 424,
+          message: 'Zorg dat je zowel een e-mailadres als wachtwoord opgeeft',
+        },
+      ])
+    }
+
+    const {
+      data: { loginWithEmail = {} },
+    } = await login()
+
+    const { errors = [], user = {}, token } = loginWithEmail
+
+    if (errors.length > 0) {
+      setLoading(false)
+      return setErrors(errors)
+    }
+
+    setUser({ ...user, token })
+    setLoading(false)
+  }
 
   return (
     <Container>
@@ -85,7 +140,21 @@ const LoginScreen = (props) => {
           />
         </Block>
 
-        <LoginButton>Inloggen</LoginButton>
+        {Boolean(errors.length) && (
+          <Block marginBottom={24}>
+            <ErrorText>{errors[0].message}</ErrorText>
+          </Block>
+        )}
+
+        {Boolean(user) && (
+          <Block marginBottom={24}>
+            <Text>{JSON.stringify(user)}</Text>
+          </Block>
+        )}
+
+        <LoginButton onPress={handleLoginWithEmail}>
+          {loading ? <ActivityIndicator color={color.white} /> : 'Inloggen'}
+        </LoginButton>
 
         <Block marginBottom={24}>
           <DividerTitle>of</DividerTitle>
