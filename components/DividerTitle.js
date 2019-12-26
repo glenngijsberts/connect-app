@@ -8,7 +8,7 @@ const Holder = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: ${Layout.gridWidth}px;
+  width: 100%;
 `
 
 const Divider = styled(View)`

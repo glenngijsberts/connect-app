@@ -6,10 +6,9 @@ import Layout from '../theme/Layout'
 import styled, { css } from 'styled-components/native'
 
 const Button = styled(TouchableOpacity)`
-  width: ${Layout.gridWidth}px;
   padding: 12px 16px;
-  border-radius: 4px;
-  font-size: 17px;
+  border-radius: 8px;
+  height: 44px;
 
   ${(props) =>
     props.variant === 'primary' &&
@@ -30,6 +29,7 @@ const Label = styled(Text)`
   font-weight: 500;
   color: ${color.white};
   text-align: center;
+  font-size: 15px;
 `
 
 const ButtonWrapper = ({ children, variant, ...props }) => (

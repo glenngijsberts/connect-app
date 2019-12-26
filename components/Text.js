@@ -8,10 +8,12 @@ export function MonoText({ style, ...props }) {
 }
 
 const StyledFootnote = styled(Text)`
-  color: ${color.black};
+  color: ${(props) => (props.variant === 'alt' ? color.grey : color.black)};
   font-size: 13px;
   font-weight: 400;
   font-family: 'System';
+  line-height: 18px;
+  text-align: ${(props) => (props.center ? 'center' : 'left')};
 `
 
 export const Footnote = ({ ...props }) => <StyledFootnote {...props} />
@@ -21,6 +23,7 @@ const StyledParagraph = styled(Text)`
   font-size: 17px;
   font-weight: 400;
   font-family: 'System';
+  line-height: 22px;
 `
 
 export const Paragraph = ({ ...props }) => <StyledParagraph {...props} />
