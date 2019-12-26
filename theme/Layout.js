@@ -9,5 +9,6 @@ export default {
     height,
   },
   gridWidth: width - 32,
+  gridWidthSmall: width - 64,
   isSmallDevice: width < 375,
 }

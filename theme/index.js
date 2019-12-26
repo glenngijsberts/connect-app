@@ -6,6 +6,7 @@ export const color = {
   greyLight: '#F7F7F7',
   white: '#fff',
   linkedIn: '#0073B1',
+  danger: 'red',
 }
 
 export const spacing = {
