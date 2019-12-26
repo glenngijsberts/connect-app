@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 import { APP_NAME } from '../../constants'
 import { Footnote, SmallTitle } from '../../components/Text'
 import { spacing, color } from '../../theme'
+import Layout from '../../theme/Layout'
 import Button from '../../components/Button'
 
 const Container = styled(SafeAreaView)`
@@ -17,7 +18,8 @@ const TopContent = styled(View)`
 
 const BottomContent = styled(View)`
   flex: 1;
-  align-items: center;
+  width: ${Layout.gridWidth}px;
+  margin: 0 auto;
   justify-content: flex-end;
 `
 
@@ -70,7 +72,11 @@ const RegisterScreen = ({ ...props }) => (
       <LinkedInButton variant="linkedIn">
         Registreren met LinkedIn
       </LinkedInButton>
-      <EmailButton>Registreren met e-mail</EmailButton>
+      <EmailButton
+        onPress={() => props.navigation.navigate('RegisterInfoScreen')}
+      >
+        Registreren met e-mail
+      </EmailButton>
 
       <LoginLink>
         {/* Keep the space at the end */}

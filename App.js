@@ -9,6 +9,7 @@ import styled from 'styled-components/native'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { endpoint as uri } from './config'
+import { RegisterProvider } from './context/RegisterContext'
 
 // Create the client as outlined in the setup guide
 const client = new ApolloClient({
@@ -21,7 +22,10 @@ const Container = styled(View)`
 
 async function loadResourcesAsync() {
   await Promise.all([
-    Asset.loadAsync([require('./assets/images/undraw_register.png')]),
+    Asset.loadAsync([
+      require('./assets/images/undraw_register.png'),
+      require('./assets/images/undraw_registerComplete.png'),
+    ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
       ...Ionicons.font,
@@ -51,10 +55,12 @@ const App = ({ skipLoadingScreen, ...props }) => {
   } else {
     return (
       <ApolloProvider client={client}>
-        <Container>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator initialSwitch="App" />
-        </Container>
+        <RegisterProvider>
+          <Container>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <AppNavigator initialSwitch="App" />
+          </Container>
+        </RegisterProvider>
       </ApolloProvider>
     )
   }

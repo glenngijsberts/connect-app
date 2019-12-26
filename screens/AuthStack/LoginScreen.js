@@ -24,7 +24,8 @@ const Container = styled(SafeAreaView)`
 const TopContent = styled(View)`
   flex: 1;
   padding-top: ${spacing[32]};
-  align-items: center;
+  width: ${Layout.gridWidth}px;
+  margin: 0 auto;
 `
 
 const BottomContent = styled(View)`
@@ -60,9 +61,9 @@ const PrivacyLink = styled(Text)`
   color: ${color.primary};
 `
 
-const ErrorText = styled(Text)`
+const ErrorText = styled(Footnote)`
   text-align: center;
-  color: red;
+  color: ${color.danger};
   max-width: ${Layout.gridWidth}px;
 `
 
