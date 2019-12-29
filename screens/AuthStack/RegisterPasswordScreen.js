@@ -14,7 +14,7 @@ import Layout from '../../theme/Layout'
 import Block from '../../components/Block'
 import Input from '../../components/Input'
 import RegisterContext from '../../context/RegisterContext'
-import SIGNUP_WITH_EMAIL from '../../graphql-mutations/signupWithEmail'
+import SIGNUP from '../../graphql-mutations/signup'
 import { useMutation } from '@apollo/react-hooks'
 
 const Container = styled(SafeAreaView)`
@@ -48,7 +48,7 @@ const RegisterPasswordScreen = ({ ...props }) => {
 
   const passwordConfirmRef = useRef()
 
-  const [signup] = useMutation(SIGNUP_WITH_EMAIL)
+  const [signup] = useMutation(SIGNUP)
 
   const handleNextStep = async () => {
     setError(null)
@@ -72,7 +72,9 @@ const RegisterPasswordScreen = ({ ...props }) => {
         displayTitle: user.displayTitle,
         website: user.website,
         phone: user.phone,
+        photo: user.userPhoto,
         password,
+        isLinkedInUser: user.isLinkedInUser,
       },
     })
 

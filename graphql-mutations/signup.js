@@ -1,21 +1,25 @@
 import { gql } from 'apollo-boost'
 
-const SIGNUP_WITH_EMAIL = gql`
-  mutation signupWithEmail(
+const SIGNUP = gql`
+  mutation signup(
     $name: String!
     $email: String!
     $displayTitle: String
     $website: String
     $phone: String
+    $photo: String
     $password: String!
+    $isLinkedInUser: Boolean
   ) {
-    signupWithEmail(
+    signup(
       name: $name
       email: $email
       displayTitle: $displayTitle
       website: $website
       phone: $phone
+      photo: $photo
       password: $password
+      isLinkedInUser: $isLinkedInUser
     ) {
       token
       user {
@@ -31,4 +35,4 @@ const SIGNUP_WITH_EMAIL = gql`
   }
 `
 
-export default SIGNUP_WITH_EMAIL
+export default SIGNUP

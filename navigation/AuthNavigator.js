@@ -26,7 +26,10 @@ const config = Platform.select({
 
 const MainStack = createStackNavigator(
   {
-    Introduction: RegisterScreen,
+    Introduction: {
+      screen: RegisterScreen,
+      path: 'register',
+    },
     RegisterInfoScreen: RegisterInfoScreen,
     RegisterPhotoScreen: RegisterPhotoScreen,
     RegisterPasswordScreen: RegisterPasswordScreen,
@@ -43,6 +46,7 @@ const AuthStack = createStackNavigator(
   {
     Main: {
       screen: MainStack,
+      path: '',
     },
     RegisterComplete: {
       screen: RegisterCompleteScreen,

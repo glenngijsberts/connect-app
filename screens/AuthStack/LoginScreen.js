@@ -5,7 +5,9 @@ import {
   Text,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
 } from 'react-native'
+import { AuthSession } from 'expo'
 import styled from 'styled-components/native'
 import { Footnote } from '../../components/Text'
 import { spacing, color } from '../../theme'
@@ -17,6 +19,9 @@ import DividerTitle from '../../components/DividerTitle'
 import * as WebBrowser from 'expo-web-browser'
 import { useMutation } from '@apollo/react-hooks'
 import LOGIN_WITH_EMAIL from '../../graphql-mutations/login'
+import LOGIN_WITH_LINKEDIN from '../../graphql-mutations/loginWithLinkedIn'
+import { client_id, client_secret, linkedinState } from '../../config'
+import axios from 'axios'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -78,12 +83,99 @@ const LoginScreen = (props) => {
   const [errors, setErrors] = useState([])
   const [user, setUser] = useState(null)
   const passwordRef = useRef()
+  const [loginLinkedIn] = useMutation(LOGIN_WITH_LINKEDIN)
   const [login] = useMutation(LOGIN_WITH_EMAIL, {
     variables: {
       email,
       password,
     },
   })
+
+  const handleLinkedInLogin = async () => {
+    /*
+      Open LinkedIn inside a web-browser that can
+      handle oAuth authentication
+    */
+    const redirectUrl = AuthSession.getRedirectUrl()
+
+    const result = await AuthSession.startAsync({
+      authUrl: `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(
+        redirectUrl
+      )}&state=${linkedinState}&scope=r_emailaddress,r_liteprofile`,
+    })
+
+    const { type, errorCode, params } = result
+
+    /*
+      All errors that users can get by cancel the flow on
+      their own.
+    */
+    if (!type) return
+    if (type === 'cancel') return
+    if (type === 'error' && errorCode === 'login-declined') return
+    if (type === 'success' && params.error === 'user_cancelled_login') return
+
+    if (!params.code) {
+      return Alert.alert(
+        'Foutmelding',
+        'Het is niet gelukt om je LinkedIn profiel op te halen! De verbinding met LinkedIn is tussentijds onderbroken'
+      )
+    }
+
+    /*
+      At this point the user is authenticated by LinkedIn
+      so we are able to get the access-token
+    */
+    const headers = {}
+    headers['content-type'] = 'application/x-www-form-urlencoded'
+
+    axios
+      .post(
+        `https://www.linkedin.com/oauth/v2/accessToken?client_id=${client_id}&client_secret=${client_secret}&grant_type=authorization_code&redirect_uri=${encodeURIComponent(
+          redirectUrl
+        )}&code=${params.code}`,
+        {
+          headers,
+        }
+      )
+      .then(async (response) => {
+        const { data = {} } = response
+
+        if (!data.access_token) {
+          return Alert.alert(
+            'Foutmelding',
+            'Het is niet gelukt om je LinkedIn profiel op te halen! Je persoonlijke LinkedIn code kon niet opgehaald worden'
+          )
+        }
+
+        const { access_token } = data
+
+        /*
+          At this point we have the access_token from the user
+          so we can retrieve his info (name, photo & email). We pass
+          the access_token to our graphql server
+        */
+        const {
+          data: { loginWithLinkedIn },
+        } = await loginLinkedIn({
+          variables: {
+            access_token,
+          },
+        })
+
+        if (loginWithLinkedIn.errors.length > 0) {
+          return Alert.alert('Foutmelding', loginWithLinkedIn.errors[0].message)
+        }
+
+        props.navigation.navigate('App')
+      })
+      .catch((error) => {
+        return Alert.alert(
+          'Foutmelding',
+          'Het is niet gelukt om je met LinkedIn in te laten loggen'
+        )
+      })
+  }
 
   const handleLoginWithEmail = async () => {
     setErrors([])
@@ -161,7 +253,9 @@ const LoginScreen = (props) => {
           <DividerTitle>of</DividerTitle>
         </Block>
 
-        <Button variant="linkedIn">Inloggen met LinkedIn</Button>
+        <Button variant="linkedIn" onPress={() => handleLinkedInLogin()}>
+          Inloggen met LinkedIn
+        </Button>
       </TopContent>
 
       <BottomContent>

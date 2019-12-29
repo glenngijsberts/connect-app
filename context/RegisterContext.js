@@ -16,7 +16,8 @@ function RegisterProvider(props) {
     website: '',
     phone: '',
   })
-  const [userPhoto, setUserPhoto] = useState('')
+  const [isLinkedInUser, setIsLinkedInUser] = useState(true)
+  const [userPhoto, setUserPhoto] = useState(null)
   const [userPassword, setUserPassword] = useState('')
 
   return (
@@ -26,8 +27,10 @@ function RegisterProvider(props) {
           ...user,
           userPhoto,
           userPassword,
+          isLinkedInUser,
         },
         setUser: (state) => setUser(state),
+        setIsLinkedInUser: (bool) => setIsLinkedInUser(bool),
         setUserPhoto: (state) => setUserPhoto(state),
         setUserPassword: (state) => setUserPassword(state),
         clear: () => {
@@ -37,8 +40,9 @@ function RegisterProvider(props) {
             tagline: '',
             website: '',
             phone: '',
+            isLinkedInUser: false,
           })
-          setUserPhoto('')
+          setUserPhoto(null)
           setUserPassword('')
         },
       }}
