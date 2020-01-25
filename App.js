@@ -25,6 +25,7 @@ async function loadResourcesAsync() {
     Asset.loadAsync([
       require('./assets/images/undraw_register.png'),
       require('./assets/images/undraw_registerComplete.png'),
+      require('./assets/images/undraw_onboarding-1.png'),
     ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
@@ -58,7 +59,7 @@ const App = ({ skipLoadingScreen, ...props }) => {
         <RegisterProvider>
           <Container>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <AppNavigator initialSwitch="App" />
+            <AppNavigator />
           </Container>
         </RegisterProvider>
       </ApolloProvider>
