@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { SafeAreaView, View, ScrollView } from 'react-native'
+import { SafeAreaView, View, ScrollView, AsyncStorage } from 'react-native'
 import styled from 'styled-components/native'
 import Layout from '../../theme/Layout'
 import { color } from '../../theme'
@@ -52,7 +52,15 @@ const Onboarding = (props) => {
       text: 'Maak zelf de keuze met wie je wel en niet wilt connecten',
       button: {
         label: 'Naar de app',
-        onPress: () => props.navigation.navigate('Auth'),
+        onPress: async () => {
+          try {
+            await AsyncStorage.setItem('IS_ONBOARDED', JSON.stringify('true'))
+          } catch (error) {
+            // @TODO: Sentry log
+          }
+
+          props.navigation.navigate('Auth')
+        },
       },
     },
   ]

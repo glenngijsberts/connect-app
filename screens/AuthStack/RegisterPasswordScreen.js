@@ -4,7 +4,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
-  Text,
+  AsyncStorage,
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Paragraph, SmallTitle, Footnote } from '../../components/Text'
@@ -16,6 +16,7 @@ import Input from '../../components/Input'
 import RegisterContext from '../../context/RegisterContext'
 import SIGNUP from '../../graphql-mutations/signup'
 import { useMutation } from '@apollo/react-hooks'
+import { AUTH_TOKEN } from '../../constants'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -65,7 +66,7 @@ const RegisterPasswordScreen = ({ ...props }) => {
       return setError('De twee ingevulde wachtwoorden komen niet overeen')
     }
 
-    const signupWithEmail = await signup({
+    const { data } = await signup({
       variables: {
         name: user.name,
         email: user.email,
@@ -80,6 +81,12 @@ const RegisterPasswordScreen = ({ ...props }) => {
 
     clear()
 
+    /*
+      At this point the user is registered and we can
+      set the api token. After that we show the Register
+      Complete modalscreen.
+    */
+    await AsyncStorage.setItem(AUTH_TOKEN, data.signup.token)
     props.navigation.navigate('RegisterComplete')
   }
 

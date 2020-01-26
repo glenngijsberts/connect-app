@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import { AuthSession } from 'expo'
 import styled from 'styled-components/native'
@@ -22,6 +23,7 @@ import LOGIN_WITH_EMAIL from '../../graphql-mutations/login'
 import LOGIN_WITH_LINKEDIN from '../../graphql-mutations/loginWithLinkedIn'
 import { client_id, client_secret, linkedinState } from '../../config'
 import axios from 'axios'
+import { AUTH_TOKEN } from '../../constants'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -81,7 +83,6 @@ const LoginScreen = (props) => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
-  const [user, setUser] = useState(null)
   const passwordRef = useRef()
   const [loginLinkedIn] = useMutation(LOGIN_WITH_LINKEDIN)
   const [login] = useMutation(LOGIN_WITH_EMAIL, {
@@ -94,7 +95,9 @@ const LoginScreen = (props) => {
   const handleLinkedInLogin = async () => {
     /*
       Open LinkedIn inside a web-browser that can
-      handle oAuth authentication
+      handle oAuth authentication. First we need to
+      get a code to retrieve the basic info. This code
+      can be used to get the access_token.
     */
     const redirectUrl = AuthSession.getRedirectUrl()
 
@@ -123,7 +126,7 @@ const LoginScreen = (props) => {
     }
 
     /*
-      At this point the user is authenticated by LinkedIn
+      At this point the user basic info is granted by LinkedIn
       so we are able to get the access-token
     */
     const headers = {}
@@ -153,7 +156,7 @@ const LoginScreen = (props) => {
         /*
           At this point we have the access_token from the user
           so we can retrieve his info (name, photo & email). We pass
-          the access_token to our graphql server
+          the access_token to our graphql server to get an api token
         */
         const {
           data: { loginWithLinkedIn },
@@ -167,19 +170,26 @@ const LoginScreen = (props) => {
           return Alert.alert('Foutmelding', loginWithLinkedIn.errors[0].message)
         }
 
+        /*
+          The user is logged in at this point so
+          we save the api token in the AsyncStorage.
+          After that we send the user to the app content.
+        */
+        await AsyncStorage.setItem(AUTH_TOKEN, loginWithLinkedIn.token)
+
         props.navigation.navigate('App')
       })
       .catch((error) => {
+        // @TODO: Add sentry log
         return Alert.alert(
           'Foutmelding',
-          'Het is niet gelukt om je met LinkedIn in te laten loggen'
+          'Het is niet gelukt om je met LinkedIn in te laten loggen. Probeer het opnieuw'
         )
       })
   }
 
   const handleLoginWithEmail = async () => {
     setErrors([])
-    setUser(null)
     setLoading(true)
 
     if (!email || !password) {
@@ -197,15 +207,22 @@ const LoginScreen = (props) => {
       data: { loginWithEmail = {} },
     } = await login()
 
-    const { errors = [], user = {}, token } = loginWithEmail
+    const { errors = [], token } = loginWithEmail
 
     if (errors.length > 0) {
       setLoading(false)
       return setErrors(errors)
     }
 
-    setUser({ ...user, token })
     setLoading(false)
+    /*
+      The user is logged in at this point so
+      we save the api token in the AsyncStorage.
+      After that we send the user to the app content.
+    */
+    await AsyncStorage.setItem(AUTH_TOKEN, loginWithLinkedIn.token)
+
+    props.navigation.navigate('App')
   }
 
   return (
@@ -236,12 +253,6 @@ const LoginScreen = (props) => {
         {Boolean(errors.length) && (
           <Block marginBottom={24}>
             <ErrorText>{errors[0].message}</ErrorText>
-          </Block>
-        )}
-
-        {Boolean(user) && (
-          <Block marginBottom={24}>
-            <Text>{JSON.stringify(user)}</Text>
           </Block>
         )}
 

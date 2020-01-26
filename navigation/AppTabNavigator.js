@@ -10,6 +10,7 @@ import TabBarIcon from '../components/TabBarIcon'
 */
 import EventScreen from '../screens/EventStack/EventScreen'
 import ConnectionScreen from '../screens/ConnectionStack/ConnectionScreen'
+import DevScreen from '../screens/DevStack/DevScreen'
 
 /*
   Config
@@ -60,12 +61,34 @@ ConnectionStack.navigationOptions = {
 }
 
 /*
+  DevStack
+  Only use this stack while developing
+*/
+const DevStack = createStackNavigator(
+  {
+    Dev: DevScreen,
+  },
+  config
+)
+
+DevStack.navigationOptions = {
+  tabBarLabel: 'Development',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-cog' : 'md-cog'}
+    />
+  ),
+}
+
+/*
   TabNavigator
 */
 const AppTabNavigator = createBottomTabNavigator(
   {
     EventStack,
     ConnectionStack,
+    DevStack,
   },
   {
     tabBarOptions: {
