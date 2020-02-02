@@ -2,7 +2,7 @@ import { AppLoading } from 'expo'
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import React, { useState } from 'react'
-import { Platform, StatusBar, View } from 'react-native'
+import { Platform, StatusBar, View, AsyncStorage } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import AppNavigator from './navigation/AppNavigator'
 import styled from 'styled-components/native'
@@ -10,10 +10,22 @@ import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { endpoint as uri } from './config'
 import { RegisterProvider } from './context/RegisterContext'
+import { AUTH_TOKEN } from './constants'
 
-// Create the client as outlined in the setup guide
+/*
+  Setup of the ApolloClient and passing the
+  token from the AsyncStorage if present
+*/
 const client = new ApolloClient({
   uri,
+  request: async (operation) => {
+    const token = await AsyncStorage.getItem(AUTH_TOKEN)
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    })
+  },
 })
 
 const Container = styled(View)`
@@ -26,6 +38,7 @@ async function loadResourcesAsync() {
       require('./assets/images/undraw_register.png'),
       require('./assets/images/undraw_registerComplete.png'),
       require('./assets/images/undraw_onboarding-1.png'),
+      require('./assets/images/undraw_events.png'),
     ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
