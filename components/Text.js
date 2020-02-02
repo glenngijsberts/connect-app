@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'react-native'
 import styled from 'styled-components/native'
-import { color, spacing } from '../theme'
+import { color } from '../theme'
 
 export function MonoText({ style, ...props }) {
   return <Text {...props} style={[style, { fontFamily: 'space-mono' }]} />
