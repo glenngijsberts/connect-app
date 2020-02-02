@@ -8,7 +8,7 @@ const SIGNUP = gql`
     $website: String
     $phone: String
     $photo: String
-    $password: String!
+    $password: String
     $isLinkedInUser: Boolean
   ) {
     signup(

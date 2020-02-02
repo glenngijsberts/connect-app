@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   View,
   Image,
@@ -6,6 +6,7 @@ import {
   Text,
   SafeAreaView,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import styled from 'styled-components/native'
 import { APP_NAME } from '../../constants'
@@ -19,6 +20,7 @@ import axios from 'axios'
 import { useMutation } from '@apollo/react-hooks'
 import START_SIGNUP_WITH_LINKEDIN from '../../graphql-mutations/startSignupWithLinkedIn'
 import RegisterContext from '../../context/RegisterContext'
+import { AUTH_TOKEN } from '../../constants'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -71,10 +73,18 @@ const LoginLinkButtonLabel = styled(Text)`
 `
 
 const RegisterScreen = ({ ...props }) => {
-  const { setUserPhoto, setUser, setIsLinkedInUser } = useContext(
+  const { setUserPhoto, setUser, setIsLinkedInUser, clear } = useContext(
     RegisterContext
   )
   const [startSignup] = useMutation(START_SIGNUP_WITH_LINKEDIN)
+
+  /*
+    When this view is mounted/loaded we clear the
+    user context (thats being used in the register flow)
+  */
+  useEffect(() => {
+    clear()
+  }, [])
 
   const handleLinkedInLogin = async () => {
     /*
@@ -161,11 +171,17 @@ const RegisterScreen = ({ ...props }) => {
           return Alert.alert('Foutmelding', errors[0].message)
         }
 
+        /*
+          The API will check if the email is already in use
+          with LinkedIn login and will return a token if so
+        */
         if (token) {
           Alert.alert(
             'Aanmelden gelukt',
             'Het blijkt dat je al een account hebt. Je bent ingelogd'
           )
+
+          await AsyncStorage.setItem(AUTH_TOKEN, token)
           return props.navigation.navigate('App')
         }
 
@@ -182,6 +198,8 @@ const RegisterScreen = ({ ...props }) => {
         return props.navigation.navigate('RegisterInfoScreen')
       })
       .catch((error) => {
+        console.log(error)
+        // @TODO: Sentry log
         return Alert.alert(
           'Foutmelding',
           'Het is niet gelukt om je LinkedIn profiel op te halen! Dit heeft te maken met de verbinding tussen de applicatie en LinkedIn'

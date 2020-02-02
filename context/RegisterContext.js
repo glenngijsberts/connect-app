@@ -44,6 +44,7 @@ function RegisterProvider(props) {
           })
           setUserPhoto(null)
           setUserPassword('')
+          setIsLinkedInUser(false)
         },
       }}
     >

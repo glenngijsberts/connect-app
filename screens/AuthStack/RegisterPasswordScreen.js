@@ -42,6 +42,9 @@ const ErrorText = styled(Footnote)`
 
 const RegisterPasswordScreen = ({ ...props }) => {
   const { user, setUserPassword, clear } = useContext(RegisterContext)
+  const { isLinkedInUser } = user
+
+  console.log(user)
 
   const [password, setPassword] = useState(user.userPassword)
   const [passwordConfirm, setPasswordConfirm] = useState(user.userPassword)
@@ -52,20 +55,6 @@ const RegisterPasswordScreen = ({ ...props }) => {
   const [signup] = useMutation(SIGNUP)
 
   const handleNextStep = async () => {
-    setError(null)
-
-    if (!password || !passwordConfirm) {
-      return setError('Zorg dat je een geldig wachtwoord invult')
-    }
-
-    if (password.length < 6) {
-      return setError('Zorg dat je wachtwoord minimaal 6 tekens bevat')
-    }
-
-    if (password !== passwordConfirm) {
-      return setError('De twee ingevulde wachtwoorden komen niet overeen')
-    }
-
     const { data } = await signup({
       variables: {
         name: user.name,
@@ -74,7 +63,7 @@ const RegisterPasswordScreen = ({ ...props }) => {
         website: user.website,
         phone: user.phone,
         photo: user.userPhoto,
-        password,
+        password: (!user.isLinkedInUser && password) || null,
         isLinkedInUser: user.isLinkedInUser,
       },
     })
@@ -90,14 +79,33 @@ const RegisterPasswordScreen = ({ ...props }) => {
     props.navigation.navigate('RegisterComplete')
   }
 
+  const checkForPassword = () => {
+    setError(null)
+
+    if (!password || !passwordConfirm) {
+      return setError('Zorg dat je een geldig wachtwoord invult')
+    }
+
+    if (password.length < 6) {
+      return setError('Zorg dat je wachtwoord minimaal 6 tekens bevat')
+    }
+
+    if (password !== passwordConfirm) {
+      return setError('De twee ingevulde wachtwoorden komen niet overeen')
+    }
+
+    handleNextStep()
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Container>
         <TopContent>
           <ScreenTitle>Wachtwoord</ScreenTitle>
           <ScreenDescription>
-            Kies zorgvuldig een wachtwoord. Vertel je wachtwoord nooit aan
-            iemand!
+            {isLinkedInUser
+              ? 'Vanaf nu kan je LinkedIn gebruiken om je aan te melden. Je hebt geen wachtwoord nodig!'
+              : 'Kies zorgvuldig een wachtwoord. Vertel je wachtwoord nooit aan iemand!'}
           </ScreenDescription>
 
           {error && (
@@ -106,34 +114,44 @@ const RegisterPasswordScreen = ({ ...props }) => {
             </Block>
           )}
 
-          <Block marginBottom={16}>
-            <Input
-              placeholder="Wachtwoord"
-              value={password}
-              onChangeText={(value) => {
-                setPassword(value)
-                setUserPassword(value)
-              }}
-              keyboardType="default"
-              onSubmitEditing={() => passwordConfirmRef.current.focus()}
-              blurOnSubmit={false}
-              secureTextEntry={true}
-              required
-            />
-          </Block>
+          {!isLinkedInUser && (
+            <>
+              <Block marginBottom={16}>
+                <Input
+                  placeholder="Wachtwoord"
+                  value={password}
+                  onChangeText={(value) => {
+                    setPassword(value)
+                    setUserPassword(value)
+                  }}
+                  keyboardType="default"
+                  onSubmitEditing={() => passwordConfirmRef.current.focus()}
+                  blurOnSubmit={false}
+                  secureTextEntry={true}
+                  required
+                />
+              </Block>
 
-          <Block marginBottom={24}>
-            <Input
-              placeholder="Herhaal wachtwoord"
-              value={passwordConfirm}
-              onChangeText={(value) => setPasswordConfirm(value)}
-              keyboardType="default"
-              secureTextEntry={true}
-              required
-            />
-          </Block>
+              <Block marginBottom={24}>
+                <Input
+                  placeholder="Herhaal wachtwoord"
+                  value={passwordConfirm}
+                  onChangeText={(value) => setPasswordConfirm(value)}
+                  keyboardType="default"
+                  secureTextEntry={true}
+                  required
+                />
+              </Block>
+            </>
+          )}
 
-          <Button onPress={() => handleNextStep()}>Profiel aanmaken</Button>
+          <Button
+            onPress={() =>
+              isLinkedInUser ? handleNextStep() : checkForPassword()
+            }
+          >
+            Profiel aanmaken
+          </Button>
 
           <Block marginTop={24}>
             <Footnote variant="alt">
