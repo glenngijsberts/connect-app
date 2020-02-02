@@ -4,100 +4,55 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native'
 import styled from 'styled-components/native'
-import { color } from '../../theme'
-
-const Header = styled(View)`
-  height: 96px;
-  padding-left: 16px;
-  padding-right: 16px;
-  border-bottom-color: ${color.greyLight};
-  border-bottom-width: 1px;
-  padding-bottom: 8px;
-  display: flex;
-  justify-content: flex-end;
-`
-
-const Title = styled(Text)`
-  font-size: 34px;
-  color: ${color.black};
-  font-weight: bold;
-`
-
-const SegmentLeft = styled(TouchableOpacity)`
-  background-color: ${(props) => (props.active ? color.primary : color.white)};
-  padding: 8px;
-  flex: 1;
-  border-width: 1px;
-  border-color: ${color.primary};
-  border-top-left-radius: 8px;
-  border-top-right-radius: 0px;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 0px;
-`
-const SegmentRight = styled(TouchableOpacity)`
-  background-color: ${(props) => (props.active ? color.primary : color.white)};
-  padding: 8px;
-  flex: 1;
-  border-width: 1px;
-  border-color: ${color.primary};
-  border-top-left-radius: 0px;
-  border-top-right-radius: 8px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 8px;
-`
-
-const SegmentController = styled(View)`
-  width: 100%;
-  height: auto;
-  padding: 8px 16px;
-  display: flex;
-  flex-direction: row;
-`
-
-const SegmentLabel = styled(Text)`
-  font-size: 13px;
-  color: ${(props) => (props.active ? color.white : color.black)};
-  text-align: center;
-  font-weight: 500;
-`
-
-const EventsView = styled(View)`
-  display: flex;
-  height: 400px;
-`
+import Layout from '../../theme/Layout'
+import SegmentController from '../../components/SegmentController'
+import LargeHeader from '../../components/LargeHeader'
+import SmallHeader from '../../components/SmallHeader'
+import EventEmptyView from '../../components/EventEmptyView'
+import { useQuery } from '@apollo/react-hooks'
+import GET_VIEWER_EVENTS from '../../graphql-queries/getViewerEvents'
 
 const EventScreen = () => {
-  const [index, setIndex] = useState(0)
+  const [active, setActive] = useState(0)
+  const [largeHeaderInView, setLargeHeaderInView] = useState(true)
+
+  const checkPosition = (event) => {
+    if (event.nativeEvent.contentOffset.y > 35) {
+      return setLargeHeaderInView(false)
+    }
+
+    setLargeHeaderInView(true)
+  }
+
+  const { data, loading } = useQuery(GET_VIEWER_EVENTS)
+
+  console.log(data)
+
   return (
     <SafeAreaView>
-      <ScrollView>
-        <Header>
-          <Title>Evenementen</Title>
-        </Header>
+      <SmallHeader title="Evenementen" largeHeaderInView={largeHeaderInView} />
 
-        <SegmentController>
-          <SegmentLeft active={index === 0} onPress={() => setIndex(0)}>
-            <SegmentLabel active={index === 0}>Mijn evenementen</SegmentLabel>
-          </SegmentLeft>
-          <SegmentRight active={index === 1} onPress={() => setIndex(1)}>
-            <SegmentLabel active={index === 1}>Evenementen</SegmentLabel>
-          </SegmentRight>
-        </SegmentController>
+      <ScrollView
+        onScroll={(event) => checkPosition(event)}
+        scrollEventThrottle={16}
+        style={{
+          minHeight: Layout.window.height,
+        }}
+      >
+        <LargeHeader title="Evenementen" withSmallHeader={true} />
 
-        {index === 0 && (
-          <EventsView>
-            <Text>Mijn evenementen</Text>
-          </EventsView>
-        )}
+        <SegmentController
+          active={active}
+          setActive={setActive}
+          controls={['Mijn evenementen', 'Evenementen']}
+        />
 
-        {index === 1 && (
-          <EventsView>
-            <Text>Evenementen</Text>
-          </EventsView>
-        )}
+        {active === 0 && <EventEmptyView />}
+
+        {active === 1 && <Text>Evenementen</Text>}
       </ScrollView>
     </SafeAreaView>
   )
