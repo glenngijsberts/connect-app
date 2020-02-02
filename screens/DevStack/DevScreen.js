@@ -15,7 +15,7 @@ const LogoutButton = styled(TouchableOpacity)`
   margin: 24px auto;
 `
 
-const EventScreen = (props) => {
+const DevScreen = (props) => {
   const [token, setToken] = useState('')
 
   useEffect(() => {
@@ -43,8 +43,8 @@ const EventScreen = (props) => {
   )
 }
 
-EventScreen.navigationOptions = {
+DevScreen.navigationOptions = {
   header: null,
 }
 
-export default EventScreen
+export default DevScreen
