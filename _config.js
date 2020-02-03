@@ -1,0 +1,5 @@
+export const endpoint = ''
+export const redirectUrlLinkedIn = ''
+export const client_id = ''
+export const client_secret = ''
+export const linkedinState = ''
