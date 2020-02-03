@@ -22,6 +22,8 @@ const SegmentContainer = styled(View)`
   padding: 8px 16px;
   display: flex;
   flex-direction: row;
+  border-bottom-color: ${color.greyLight};
+  border-bottom-width: 1px;
 `
 
 const SegmentLabel = styled(Text)`

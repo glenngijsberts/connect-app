@@ -46,4 +46,33 @@ ButtonWrapper.propTypes = {
   variant: PropTypes.string,
 }
 
+const SmallButton = styled(TouchableOpacity)`
+  padding: 4px 12px;
+  background-color: ${(props) => (props.active ? color.primary : color.white)};
+  border-width: 1px;
+  border-color: ${color.primary};
+  border-radius: 8px;
+`
+
+const SmallButtonLabel = styled(Text)`
+  color: ${(props) => (props.active ? color.white : color.black)};
+  font-size: 15px;
+  font-weight: 500;
+`
+
+const SmallButtonWrapper = ({ children, active, ...props }) => (
+  <SmallButton active={active} {...props}>
+    <SmallButtonLabel active={active}>{children}</SmallButtonLabel>
+  </SmallButton>
+)
+
+ButtonWrapper.defaultProps = {
+  active: false,
+}
+
+ButtonWrapper.propTypes = {
+  active: PropTypes.bool,
+}
+
+export { SmallButtonWrapper as SmallButton }
 export default ButtonWrapper

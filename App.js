@@ -39,6 +39,9 @@ async function loadResourcesAsync() {
       require('./assets/images/undraw_registerComplete.png'),
       require('./assets/images/undraw_onboarding-1.png'),
       require('./assets/images/undraw_events.png'),
+      require('./assets/images/undraw_add_event.png'),
+      require('./assets/images/undraw_add_event_2.png'),
+      require('./assets/images/undraw_add.png'),
     ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
