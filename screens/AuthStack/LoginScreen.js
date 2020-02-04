@@ -24,6 +24,7 @@ import LOGIN_WITH_LINKEDIN from '../../graphql-mutations/loginWithLinkedIn'
 import { client_id, client_secret, linkedinState } from '../../config'
 import axios from 'axios'
 import { AUTH_TOKEN } from '../../constants'
+import headerBack from '../../theme/header'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -292,10 +293,7 @@ const LoginScreen = (props) => {
 
 LoginScreen.navigationOptions = {
   title: 'Inloggen',
-  headerTintColor: color.black,
-  headerLeftContainerStyle: {
-    marginLeft: 16,
-  },
+  ...headerBack,
 }
 
 export default LoginScreen

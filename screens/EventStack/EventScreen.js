@@ -120,7 +120,7 @@ const EventScreen = (props) => {
           withSmallHeader={true}
           withIcon={{
             name: 'ios-add-circle-outline',
-            onPress: () => console.log('add event'),
+            onPress: () => props.navigation.navigate('AddEvent'),
           }}
         />
 

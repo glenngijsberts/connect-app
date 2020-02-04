@@ -21,6 +21,7 @@ import { useMutation } from '@apollo/react-hooks'
 import START_SIGNUP_WITH_LINKEDIN from '../../graphql-mutations/startSignupWithLinkedIn'
 import RegisterContext from '../../context/RegisterContext'
 import { AUTH_TOKEN } from '../../constants'
+import headerBack from '../../theme/header'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -246,6 +247,7 @@ const RegisterScreen = ({ ...props }) => {
 
 RegisterScreen.navigationOptions = {
   title: 'Registreren',
+  ...headerBack,
 }
 
 export default RegisterScreen

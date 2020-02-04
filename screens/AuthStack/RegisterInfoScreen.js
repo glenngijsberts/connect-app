@@ -14,6 +14,7 @@ import Layout from '../../theme/Layout'
 import Block from '../../components/Block'
 import Input from '../../components/Input'
 import RegisterContext from '../../context/RegisterContext'
+import headerBack from '../../theme/header'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -156,10 +157,7 @@ const RegisterInfoScreen = ({ ...props }) => {
 
 RegisterInfoScreen.navigationOptions = {
   title: 'Stap 1',
-  headerTintColor: color.black,
-  headerLeftContainerStyle: {
-    marginLeft: 16,
-  },
+  ...headerBack,
 }
 
 export default RegisterInfoScreen

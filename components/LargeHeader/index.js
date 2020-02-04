@@ -14,7 +14,7 @@ const Header = styled(View)`
   padding-bottom: 8px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: row;
 `
 const Title = styled(Text)`
@@ -31,7 +31,7 @@ const LargeHeader = ({ title, withSmallHeader, withIcon }) => (
 
     {withIcon && (
       <AddEventIcon onPress={withIcon.onPress}>
-        <Ionicons name={withIcon.name} size={26} color={color.primary} />
+        <Ionicons name={withIcon.name} size={34} color={color.primary} />
       </AddEventIcon>
     )}
   </Header>

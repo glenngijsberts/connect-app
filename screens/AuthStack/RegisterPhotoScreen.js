@@ -16,6 +16,7 @@ import Layout from '../../theme/Layout'
 import RegisterContext from '../../context/RegisterContext'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
+import headerBack from '../../theme/header'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -140,10 +141,7 @@ const RegisterPhotoScreen = ({ ...props }) => {
 
 RegisterPhotoScreen.navigationOptions = {
   title: 'Stap 2',
-  headerTintColor: color.black,
-  headerLeftContainerStyle: {
-    marginLeft: 16,
-  },
+  ...headerBack,
 }
 
 export default RegisterPhotoScreen

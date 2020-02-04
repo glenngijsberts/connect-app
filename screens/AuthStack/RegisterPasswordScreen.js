@@ -17,6 +17,7 @@ import RegisterContext from '../../context/RegisterContext'
 import SIGNUP from '../../graphql-mutations/signup'
 import { useMutation } from '@apollo/react-hooks'
 import { AUTH_TOKEN } from '../../constants'
+import headerBack from '../../theme/header'
 
 const Container = styled(SafeAreaView)`
   flex: 1;
@@ -167,10 +168,7 @@ const RegisterPasswordScreen = ({ ...props }) => {
 
 RegisterPasswordScreen.navigationOptions = {
   title: 'Stap 3',
-  headerTintColor: color.black,
-  headerLeftContainerStyle: {
-    marginLeft: 16,
-  },
+  ...headerBack,
 }
 
 export default RegisterPasswordScreen

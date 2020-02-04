@@ -7,6 +7,8 @@ import TabBarIcon from '../../components/TabBarIcon'
   Screens
 */
 import EventScreen from '../../screens/EventStack/EventScreen'
+import AddEventScreen from '../../screens/EventStack/AddEventScreen'
+
 import ConnectionScreen from '../../screens/ConnectionStack/ConnectionScreen'
 import DevScreen from '../../screens/DevStack/DevScreen'
 
@@ -24,8 +26,12 @@ const config = Platform.select({
 const EventStack = createStackNavigator(
   {
     Events: EventScreen,
+    AddEvent: AddEventScreen,
   },
-  config
+  {
+    headerBackTitleVisible: false,
+    ...config,
+  }
 )
 
 EventStack.navigationOptions = {
