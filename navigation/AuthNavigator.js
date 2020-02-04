@@ -9,8 +9,12 @@ import RegisterScreen from '../screens/AuthStack/RegisterScreen'
 import RegisterInfoScreen from '../screens/AuthStack/RegisterInfoScreen'
 import RegisterPhotoScreen from '../screens/AuthStack/RegisterPhotoScreen'
 import RegisterPasswordScreen from '../screens/AuthStack/RegisterPasswordScreen'
-import RegisterCompleteScreen from '../screens/ModalStack/RegisterCompleteScreen'
 import LoginScreen from '../screens/AuthStack/LoginScreen'
+
+/*
+  Modals
+*/
+import RegisterCompleteScreen from '../screens/Modals/RegisterCompleteScreen'
 
 /*
   Config
@@ -23,8 +27,7 @@ const config = Platform.select({
 /*
   AuthStack
 */
-
-const MainStack = createStackNavigator(
+const AuthStack = createStackNavigator(
   {
     Introduction: {
       screen: RegisterScreen,
@@ -42,10 +45,10 @@ const MainStack = createStackNavigator(
   }
 )
 
-const AuthStack = createStackNavigator(
+const AuthStackWithModals = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
+      screen: AuthStack,
       path: '',
     },
     RegisterComplete: {
@@ -58,4 +61,4 @@ const AuthStack = createStackNavigator(
   }
 )
 
-export default AuthStack
+export default AuthStackWithModals

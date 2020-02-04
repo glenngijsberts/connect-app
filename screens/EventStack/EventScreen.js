@@ -25,7 +25,7 @@ const Container = styled(View)`
   margin: 0 auto;
 `
 
-const EventScreen = () => {
+const EventScreen = (props) => {
   const [active, setActive] = useState(0)
   const [eventCategory, setEventCategory] = useState(undefined)
   const [isRefetchingMyEvents, setIsRefetchingMyEvents] = useState(false)
@@ -93,6 +93,8 @@ const EventScreen = () => {
     setIsRefetchingMyEvents(false)
   }
 
+  // return <AddEventModal />
+
   return (
     <SafeAreaView>
       <SmallHeader title="Evenementen" largeHeaderInView={largeHeaderInView} />
@@ -113,7 +115,14 @@ const EventScreen = () => {
           ) : null
         }
       >
-        <LargeHeader title="Evenementen" withSmallHeader={true} />
+        <LargeHeader
+          title="Evenementen"
+          withSmallHeader={true}
+          withIcon={{
+            name: 'ios-add-circle-outline',
+            onPress: () => console.log('add event'),
+          }}
+        />
 
         <SegmentController
           active={active}

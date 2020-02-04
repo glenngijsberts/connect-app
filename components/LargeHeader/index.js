@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components/native'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { color } from '../../theme'
+import { Ionicons } from '@expo/vector-icons'
 
 const Header = styled(View)`
   height: ${(props) => (props.withSmallHeader ? 52 : 96)};
@@ -12,7 +13,9 @@ const Header = styled(View)`
   border-bottom-width: 1px;
   padding-bottom: 8px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 `
 const Title = styled(Text)`
   font-size: 34px;
@@ -20,9 +23,17 @@ const Title = styled(Text)`
   font-weight: bold;
 `
 
-const LargeHeader = ({ title, withSmallHeader }) => (
+const AddEventIcon = styled(TouchableOpacity)``
+
+const LargeHeader = ({ title, withSmallHeader, withIcon }) => (
   <Header withSmallHeader={withSmallHeader}>
     <Title>{title}</Title>
+
+    {withIcon && (
+      <AddEventIcon onPress={withIcon.onPress}>
+        <Ionicons name={withIcon.name} size={26} color={color.primary} />
+      </AddEventIcon>
+    )}
   </Header>
 )
 

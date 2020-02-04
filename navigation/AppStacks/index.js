@@ -1,16 +1,14 @@
 import React from 'react'
-import { Platform } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack'
-import { createBottomTabNavigator } from 'react-navigation-tabs'
-import { color } from '../theme'
-import TabBarIcon from '../components/TabBarIcon'
+import { Platform } from 'react-native'
+import TabBarIcon from '../../components/TabBarIcon'
 
 /*
   Screens
 */
-import EventScreen from '../screens/EventStack/EventScreen'
-import ConnectionScreen from '../screens/ConnectionStack/ConnectionScreen'
-import DevScreen from '../screens/DevStack/DevScreen'
+import EventScreen from '../../screens/EventStack/EventScreen'
+import ConnectionScreen from '../../screens/ConnectionStack/ConnectionScreen'
+import DevScreen from '../../screens/DevStack/DevScreen'
 
 /*
   Config
@@ -81,29 +79,4 @@ DevStack.navigationOptions = {
   ),
 }
 
-/*
-  TabNavigator
-*/
-const AppTabNavigator = createBottomTabNavigator(
-  {
-    EventStack,
-    ConnectionStack,
-    DevStack,
-  },
-  {
-    tabBarOptions: {
-      activeTintColor: color.primary,
-      inactiveTintColor: color.grey,
-      labelStyle: {
-        fontWeight: '500',
-      },
-      style: {
-        backgroundColor: color.white,
-        borderTopWidth: 1,
-        borderTopColor: color.greyLight,
-      },
-    },
-  }
-)
-
-export default AppTabNavigator
+export { EventStack, ConnectionStack, DevStack }
