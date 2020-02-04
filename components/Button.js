@@ -66,11 +66,11 @@ const SmallButtonWrapper = ({ children, active, ...props }) => (
   </SmallButton>
 )
 
-ButtonWrapper.defaultProps = {
+SmallButtonWrapper.defaultProps = {
   active: false,
 }
 
-ButtonWrapper.propTypes = {
+SmallButtonWrapper.propTypes = {
   active: PropTypes.bool,
 }
 
