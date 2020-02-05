@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { color, spacing } from '../theme'
-import { TextInput, View, Text } from 'react-native'
+import { TextInput, View, Text, ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 
 const Holder = styled(View)`
@@ -10,7 +10,7 @@ const Holder = styled(View)`
 
 const Input = styled(TextInput)`
   padding: 10px 16px;
-  border-radius: 10px;
+  border-radius: 8px;
   border-width: 1px;
   height: 40px;
   font-size: 17px;
@@ -24,8 +24,14 @@ const Required = styled(Text)`
   top: 14px;
 `
 
+const Loader = styled(ActivityIndicator)`
+  position: absolute;
+  right: ${spacing[16]};
+  top: 9.5;
+`
+
 const InputWrapper = React.forwardRef(
-  ({ children, variant, required, ...props }, ref) => {
+  ({ children, variant, required, loading, ...props }, ref) => {
     const [borderColor, setBorderColor] = useState(color.grey)
 
     return (
@@ -39,6 +45,7 @@ const InputWrapper = React.forwardRef(
           ref={ref}
         />
         {required && <Required>*</Required>}
+        {loading && <Loader color={color.primary} />}
       </Holder>
     )
   }

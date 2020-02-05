@@ -14,6 +14,7 @@ import Input from '../../components/Input'
 import { useQuery } from '@apollo/react-hooks'
 import GET_LOCATIONS from '../../graphql-queries/getLocations'
 import InputGroupHeader from '../../components/InputGroupHeader'
+import { debounce } from '../../utils'
 
 const DropdownWrapper = styled(View)`
   position: relative;
@@ -54,12 +55,16 @@ const AddEventScreen = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState(null)
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
 
+  const [locationName, setLocationName] = useState('')
   const [fetchingMore, setFetchingMore] = useState(false)
 
-  const { data = {}, fetchMore } = useQuery(GET_LOCATIONS, {
+  const { data = {}, fetchMore, loading } = useQuery(GET_LOCATIONS, {
     variables: {
       first: 5,
+      name: locationName,
     },
   })
   const { locations: locationsConnection = {} } = data
@@ -73,6 +78,7 @@ const AddEventScreen = () => {
       query: GET_LOCATIONS,
       variables: {
         first: 5,
+        name: locationName,
         after: endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
@@ -86,6 +92,10 @@ const AddEventScreen = () => {
 
     setFetchingMore(false)
   }
+
+  const handleLocationName = debounce((name) => {
+    setLocationName(name)
+  }, 300)
 
   return (
     <ScrollView>
@@ -136,34 +146,52 @@ const AddEventScreen = () => {
           marginBottom: 16,
         }}
       >
-        <DropdownWrapper>
-          <Dropdown>
-            {locations.map((l) => (
-              <DropdownItem
-                active={l.id === location}
-                key={l.id}
-                onPress={() => setLocation(l.id)}
-              >
-                <DropdownLabel active={l.id === location}>
-                  {l.name}
-                </DropdownLabel>
-              </DropdownItem>
-            ))}
+        <Block style={{ marginBottom: 16 }}>
+          <Input
+            placeholder="Zoeken naar locaties.."
+            onChangeText={(value) => handleLocationName(value)}
+            loading={loading}
+          />
+        </Block>
 
-            {hasNextPage && (
-              <DropdownItem onPress={loadMoreLocations}>
-                <DropdownLoadMore>
-                  {fetchingMore ? (
-                    <ActivityIndicator color={color.primary} />
-                  ) : (
-                    'Meer laden'
-                  )}
-                </DropdownLoadMore>
-              </DropdownItem>
-            )}
-          </Dropdown>
+        <DropdownWrapper>
+          {Boolean(locations.length) && (
+            <Dropdown>
+              {locations.map((l) => (
+                <DropdownItem
+                  active={l.id === location}
+                  key={l.id}
+                  onPress={() => setLocation(l.id)}
+                >
+                  <DropdownLabel active={l.id === location}>
+                    {l.name}
+                  </DropdownLabel>
+                </DropdownItem>
+              ))}
+
+              {hasNextPage && (
+                <DropdownItem onPress={loadMoreLocations}>
+                  <DropdownLoadMore>
+                    {fetchingMore ? (
+                      <ActivityIndicator color={color.primary} />
+                    ) : (
+                      'Meer laden'
+                    )}
+                  </DropdownLoadMore>
+                </DropdownItem>
+              )}
+            </Dropdown>
+          )}
         </DropdownWrapper>
       </Block>
+
+      <InputGroupHeader
+        label="Datum"
+        onClear={() => {
+          setStartDate(null)
+          setEndDate(null)
+        }}
+      />
     </ScrollView>
   )
 }
