@@ -23,19 +23,24 @@ const Label = styled(Text)`
   color: ${color.primary};
 `
 
-const InputGroupHeader = ({ onClear, label }) => (
+const InputGroupHeader = ({ onPress, label, onPressLabel }) => (
   <Header>
     <Paragraph style={{ fontWeight: 'bold' }}>{label}</Paragraph>
-    {onClear && (
-      <Clear onPress={onClear}>
-        <Label>Leegmaken</Label>
+    {onPress && (
+      <Clear onPress={onPress}>
+        <Label>{onPressLabel}</Label>
       </Clear>
     )}
   </Header>
 )
 
+InputGroupHeader.defaultProps = {
+  onPressLabel: 'Leegmaken',
+}
+
 InputGroupHeader.propTypes = {
-  onClear: PropTypes.func,
+  onPress: PropTypes.func,
+  onPressLabel: PropTypes.string,
   label: PropTypes.string.isRequired,
 }
 

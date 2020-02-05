@@ -134,16 +134,10 @@ const EventScreen = (props) => {
         <SegmentController
           active={active}
           setActive={setActive}
-          controls={['Mijn evenementen', 'Evenementen']}
+          controls={['Evenementen', 'Mijn evenementen']}
         />
 
         {active === 0 && (
-          <Container style={{ paddingTop: 16 }}>
-            <EventView loading={myEventsLoading} events={myEvents} />
-          </Container>
-        )}
-
-        {active === 1 && (
           <>
             <EventCategoryCarousel
               eventCategory={eventCategory}
@@ -157,6 +151,12 @@ const EventScreen = (props) => {
               />
             </Container>
           </>
+        )}
+
+        {active === 1 && (
+          <Container style={{ paddingTop: 16 }}>
+            <EventView loading={myEventsLoading} events={myEvents} />
+          </Container>
         )}
       </ScrollView>
     </SafeAreaView>

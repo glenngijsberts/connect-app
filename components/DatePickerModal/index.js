@@ -9,6 +9,7 @@ const DatePickerModal = ({
   title,
   confirmLabel,
   cancelLabel,
+  ...props
 }) => (
   <DateTimePickerModal
     isVisible={show}
@@ -18,6 +19,7 @@ const DatePickerModal = ({
     headerTextIOS={title}
     confirmTextIOS={confirmLabel}
     cancelTextIOS={cancelLabel}
+    {...props}
   />
 )
 

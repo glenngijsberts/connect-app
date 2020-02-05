@@ -40,10 +40,18 @@ const filters = [
   },
 ]
 
-const EventCategoryCarousel = ({ eventCategory, setEventCategory }) => {
+const EventCategoryCarousel = ({
+  eventCategory,
+  setEventCategory,
+  excludes,
+}) => {
+  const includedFilters = filters.filter(
+    (filter) => !excludes.includes(filter.value)
+  )
+
   return (
     <ButtonsGroup horizontal={true} showsHorizontalScrollIndicator={false}>
-      {filters.map((filter, index) => (
+      {includedFilters.map((filter, index) => (
         <SmallButton
           active={filter.value === eventCategory}
           onPress={() => setEventCategory(filter.value)}
@@ -58,6 +66,10 @@ const EventCategoryCarousel = ({ eventCategory, setEventCategory }) => {
       ))}
     </ButtonsGroup>
   )
+}
+
+EventCategoryCarousel.defaultProps = {
+  excludes: [],
 }
 
 EventCategoryCarousel.propTypes = {
