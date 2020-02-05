@@ -4,7 +4,13 @@ import eventFragment from '../graphql-fragments/eventFragment'
 const GET_ACTIVE_EVENTS = gql`
   query activeEvents($isSponsored: Boolean, $category: EventCategory) {
     activeEvents(isSponsored: $isSponsored, category: $category) {
-      ...event
+      events {
+        ...event
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 

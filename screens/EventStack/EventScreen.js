@@ -75,8 +75,15 @@ const EventScreen = (props) => {
 
   const allEventsLoading = activeEventsLoading || sponsoredEventsLoading
   const sponsoredEvents =
-    (sponsoredEventsData && sponsoredEventsData.activeEvents) || []
-  const activeEvents = (activeEventsData && activeEventsData.activeEvents) || []
+    (sponsoredEventsData &&
+      sponsoredEventsData.activeEvents &&
+      sponsoredEventsData.activeEvents.events) ||
+    []
+  const activeEvents =
+    (activeEventsData &&
+      activeEventsData.activeEvents &&
+      activeEventsData.activeEvents.events) ||
+    []
 
   /*
     Pull to refresh for MyEvents
