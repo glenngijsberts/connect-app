@@ -1,4 +1,4 @@
-# To be named app
+# Interact App
 
 Mobile application powered by React Native & Expo
 

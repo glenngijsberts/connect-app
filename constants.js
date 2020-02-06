@@ -1,2 +1,2 @@
 export const AUTH_TOKEN = 'auth-token'
-export const APP_NAME = 'OOConnect'
+export const APP_NAME = 'Interact'

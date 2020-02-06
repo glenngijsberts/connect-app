@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "OOConnect",
-    "slug": "connect-app",
+    "name": "Interact",
+    "slug": "interact-app",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
-    "scheme": "ooconnect",
+    "scheme": "interact-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
